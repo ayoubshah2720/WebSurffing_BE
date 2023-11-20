@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id  Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email String @unique
+
+  name String?
+  username String @unique
+  image String?
+  bio String?
+  isVerified Boolean @default(false)
+
+  //Relationship for user a user have mulitple campaigns that's why defined [] of tweets
+  campagins Campaigns[]
+}
+
+model Campaigns {
+  id  Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String
+  url String
+  views Int
+  view_time Int
+  campaign_coins Int
+  price Int
+
+  user   User    @relation(fields: [userId], references: [id])
+  userId Int
+}
