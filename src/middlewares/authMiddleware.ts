@@ -9,7 +9,7 @@ interface JwtPayload {
 
 
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET || "";
+const JWT_SECRET = process.env.JWT_SECRET || "SUPER SECRET";
 
 type AuthRequest = Request & {user?: User}
 
