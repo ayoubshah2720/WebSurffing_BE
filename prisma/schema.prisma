@@ -24,8 +24,25 @@ model User {
 
   //Relationship for user a user have mulitple campaigns that's why defined [] of tweets
   campagins Campaigns[]
+  //Relationship for user a user have mulitple tokens that's why defined [] of tokens
+  tokens Token[]
 }
 
+model Token {
+  id Int  @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type String //EMAIL | API
+  emailToken String? @unique
+
+  valid Boolean @default(true)
+  expiration DateTime
+
+  //Relationship for token a token belongs to single user that's why defined userId
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+}
 model Campaigns {
   id  Int @id @default(autoincrement())
   createdAt DateTime @default(now())
