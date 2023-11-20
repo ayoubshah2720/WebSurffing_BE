@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 const EXPIRE_TOKEN_IN_MINUTES = 10;
 const AUTHENTICATION_EXPIRATION_HOURS = 12;
-const JWT_SECRET = "SUPER SECRET";
+const JWT_SECRET = process.env.JWT_SECRET || "";
 //Generate 6 digits token
 function generateEmailToken(): string {
  return Math.floor(100000 + Math.random() * 900000).toString();
@@ -72,16 +72,11 @@ router.post('/authenticate', async (req,res)=>{
 
     console.log(dbEmailedToken);
     (!dbEmailedToken || !dbEmailedToken?.valid) && res.sendStatus(401);
-    // if(dbEmailedToken?.user?.expiration < new Date()) {
-    //     res.status(401).json({error: "Token Expired."})
-    // };
 
     if(dbEmailedToken?.user?.email !== email){
         res.sendStatus(401)
     }
-
     //Here we validate that the user is the owner of the Email;
-
     const expiration = new Date(
         new Date().getTime() + AUTHENTICATION_EXPIRATION_HOURS * 60 * 60 * 1000
     )
