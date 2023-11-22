@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Router } from "express";
 import jwt from "jsonwebtoken";
 import { sendEmailToken } from "../services/emailService";
+require('dotenv').config();
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -31,9 +32,7 @@ router.post('/login', async (req,res)=>{
     const emailToken = generateEmailToken();
 
     const expiration = new Date(new Date().getTime() + EXPIRE_TOKEN_IN_MINUTES * 60 * 1000 )
-
     try {
-        
         const createdToken = await prisma.token.create({
             data: {
             type: 'EMAIL',
@@ -49,7 +48,7 @@ router.post('/login', async (req,res)=>{
     })
     
     console.log("created Token", createdToken),
-    // await sendEmailToken(email,emailToken)
+    await sendEmailToken(email,emailToken,username)
     res.sendStatus(200);
 } catch (error) {
     console.log(error);
